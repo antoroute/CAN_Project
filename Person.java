@@ -7,9 +7,10 @@ public class Person {
     private String lastName;
     private String BirthDate;
     private String socialNumbre;
+    private String id;
 
     public Person(String firstName, String lastName, String address, String phone, String email, String socialNumbre,
-            String BirthDate) {
+            String BirthDate, Integer id) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
@@ -45,6 +46,10 @@ public class Person {
 
     public String getSocialNumbre() {
         return socialNumbre;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public void setAddress(String address) {
