@@ -6,10 +6,12 @@ public class Person {
     private String firstName;
     private String lastName;
     private String BirthDate;
-    private String socialNumbre;
-    private String id;
+    private Integer socialNumbre;
+    private Integer id;
+    private String gender;
 
-    public Person(String firstName, String lastName, String address, String phone, String email, String socialNumbre,
+    public Person(String firstName, String lastName, String gender, String address, String phone, String email,
+            Integer socialNumbre,
             String BirthDate, Integer id) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -18,10 +20,16 @@ public class Person {
         this.email = email;
         this.socialNumbre = socialNumbre;
         this.BirthDate = BirthDate;
+        this.gender = gender;
+        this.id = socialNumbre;
     }
 
     public String getAddress() {
         return address;
+    }
+
+    public String getGender() {
+        return gender;
     }
 
     public String getBirthDate() {
@@ -44,11 +52,11 @@ public class Person {
         return phone;
     }
 
-    public String getSocialNumbre() {
+    public Integer getSocialNumbre() {
         return socialNumbre;
     }
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -76,14 +84,19 @@ public class Person {
         this.phone = phone;
     }
 
-    public void setSocialNumbre(String socialNumbre) {
-        this.socialNumbre = socialNumbre;
+    public void setSocialNumbre(String string) {
+        this.socialNumbre = string;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     @Override
     public String toString() {
         return "Person [address=" + address + ", BirthDate=" + BirthDate + ", email=" + email + ", firstName="
                 + firstName
-                + ", lastName=" + lastName + ", phone=" + phone + ", socialNumbre=" + socialNumbre + "]";
+                + ", lastName=" + lastName + ", gender=" + gender + ", phone=" + phone + ", socialNumbre="
+                + socialNumbre + "]";
     }
 }
