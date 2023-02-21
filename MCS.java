@@ -57,13 +57,14 @@ public class MCS {
         for (int i = 0; i < doctors.size(); i++) {
             Doctor doctor = doctors.get(i);
             String name = doctor.getName();
+            Integer id = doctor.getId();
             String dateOfBirth = doctor.getDateOfBirth().format(DATE_FORMATTER);
             String specialty = doctor.getSpecialty();
             String licenseNumber = doctor.getLicenseNumber();
             String hospital = doctor.getHospital();
             fileWriter.write(String.format(
-                    "    {\"name\": \"%s\", \"dateOfBirth\": \"%s\", \"specialty\": \"%s\", \"licenseNumber\": \"%s\", \"hospital\": \"%s\"}",
-                    name, dateOfBirth, specialty, licenseNumber, hospital));
+                    "    {\"name\": \"%s\",\"id\": \"%s\", \"dateOfBirth\": \"%s\", \"specialty\": \"%s\", \"licenseNumber\": \"%s\", \"hospital\": \"%s\"}",
+                    name, id, dateOfBirth, specialty, licenseNumber, hospital));
             if (i < doctors.size() - 1) {
                 fileWriter.write(",");
             }
@@ -85,9 +86,10 @@ public class MCS {
             String insuranceCompany = patient.getInsuranceCompany();
             String contactNumber = patient.getContactNumber();
             String email = patient.getEmail();
+            Integer doctorsId = patient.getDoctorsId();
             fileWriter.write(String.format(
-                    "    {\"name\": \"%s\", \"dateOfBirth\": \"%s\", \"insuranceCompany\": \"%s\", \"contactNumber\": \"%s\", \"email\": \"%s\"}",
-                    name, dateOfBirth, insuranceCompany, contactNumber, email));
+                    "    {\"name\": \"%s\", \"dateOfBirth\": \"%s\", \"insuranceCompany\": \"%s\", \"contactNumber\": \"%s\", \"email\": \"%s\", \"doctorsId\": \"%s\"}",
+                    name, dateOfBirth, insuranceCompany, contactNumber, email, doctorsId));
             if (i < patients.size() - 1) {
                 fileWriter.write(",");
             }
@@ -163,11 +165,12 @@ public class MCS {
         for (int i = 0; i < jsonDoctors.length(); i++) {
             JSONObject jsonDoctor = jsonDoctors.getJSONObject(i);
             String name = jsonDoctor.getString("name");
+            Integer id = jsonDoctor.getInt("id");
             LocalDate dateOfBirth = LocalDate.parse(jsonDoctor.getString("dateOfBirth"), DATE_FORMATTER);
             String specialty = jsonDoctor.getString("specialty");
             String licenseNumber = jsonDoctor.getString("licenseNumber");
             String hospital = jsonDoctor.getString("hospital");
-            Doctor doctor = new Doctor(name, dateOfBirth, specialty, licenseNumber, hospital);
+            Doctor doctor = new Doctor(name, id, dateOfBirth, specialty, licenseNumber, hospital);
             doctors.add(doctor);
         }
     }
@@ -185,7 +188,8 @@ public class MCS {
             String insuranceCompany = jsonPatient.getString("insuranceCompany");
             String contactNumber = jsonPatient.getString("contactNumber");
             String email = jsonPatient.getString("email");
-            Patient patient = new Patient(name, dateOfBirth, insuranceCompany, contactNumber, email);
+            Integer doctorsId = jsonPatient.getInt("doctorsId");
+            Patient patient = new Patient(name, dateOfBirth, insuranceCompany, contactNumber, email, doctorsId);
             patients.add(patient);
         }
     }

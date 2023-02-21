@@ -6,19 +6,26 @@ public class Doctor {
     private String specialty;
     private String licenseNumber;
     private String hospital;
+    private Integer id;
 
-    public Doctor(String name, LocalDate dateOfBirth, String specialty, String licenseNumber, String hospital) {
+    public Doctor(String name, Integer id, LocalDate dateOfBirth, String specialty, String licenseNumber,
+            String hospital) {
         this.name = name;
         this.dateOfBirth = dateOfBirth;
         this.specialty = specialty;
         this.licenseNumber = licenseNumber;
         this.hospital = hospital;
+        this.id = id;
     }
 
     // Getter and setter methods
     // Getters
     public String getName() {
         return name;
+    }
+
+    public Integer getId() {
+        return id;
     }
 
     public LocalDate getDateOfBirth() {
