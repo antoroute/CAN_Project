@@ -61,7 +61,8 @@ public class MCS {
             String specialty = doctor.getSpecialty();
             String licenseNumber = doctor.getLicenseNumber();
             String hospital = doctor.getHospital();
-            fileWriter.write(String.format("    {\"name\": \"%s\", \"dateOfBirth\": \"%s\", \"specialty\": \"%s\", \"licenseNumber\": \"%s\", \"hospital\": \"%s\"}",
+            fileWriter.write(String.format(
+                    "    {\"name\": \"%s\", \"dateOfBirth\": \"%s\", \"specialty\": \"%s\", \"licenseNumber\": \"%s\", \"hospital\": \"%s\"}",
                     name, dateOfBirth, specialty, licenseNumber, hospital));
             if (i < doctors.size() - 1) {
                 fileWriter.write(",");
@@ -84,7 +85,8 @@ public class MCS {
             String insuranceCompany = patient.getInsuranceCompany();
             String contactNumber = patient.getContactNumber();
             String email = patient.getEmail();
-            fileWriter.write(String.format("    {\"name\": \"%s\", \"dateOfBirth\": \"%s\", \"insuranceCompany\": \"%s\", \"contactNumber\": \"%s\", \"email\": \"%s\"}",
+            fileWriter.write(String.format(
+                    "    {\"name\": \"%s\", \"dateOfBirth\": \"%s\", \"insuranceCompany\": \"%s\", \"contactNumber\": \"%s\", \"email\": \"%s\"}",
                     name, dateOfBirth, insuranceCompany, contactNumber, email));
             if (i < patients.size() - 1) {
                 fileWriter.write(",");
@@ -133,155 +135,155 @@ public class MCS {
             String patientName = patient.getName();
             String startDateString = startDate.format(DATE_FORMATTER);
             String endDateString = endDate.format(DATE_FORMATTER);
-            fileWriter.write(String.format("  {\"doctor\": \"%s\", \"patient\": \"%s\", \"diagnosis\": \"%s\", \"medication\": \"%s\", \"startDate\": \"%s\", \"endDate\": \"%s\"}",
-            doctorName, patientName, diagnosis, medication, startDateString, endDateString));
-    if (i < treatments.size() - 1) {
-        fileWriter.write(",");
-    }
-    fileWriter.write("\n");
-}
-fileWriter.write("]");
-fileWriter.close();
-}
-
-public void loadFromFiles() throws IOException {
-loadDoctorsFromFile();
-loadPatientsFromFile();
-loadAppointmentsFromFile();
-loadTreatmentsFromFile();
-}
-
-private void loadDoctorsFromFile() throws IOException {
-Path path = Paths.get("doctor.json");
-byte[] bytes = Files.readAllBytes(path);
-String json = new String(bytes, StandardCharsets.UTF_8);
-JSONObject jsonObject = new JSONObject(json);
-JSONArray jsonDoctors = jsonObject.getJSONArray("doctors");
-for (int i = 0; i < jsonDoctors.length(); i++) {
-    JSONObject jsonDoctor = jsonDoctors.getJSONObject(i);
-    String name = jsonDoctor.getString("name");
-    LocalDate dateOfBirth = LocalDate.parse(jsonDoctor.getString("dateOfBirth"), DATE_FORMATTER);
-    String specialty = jsonDoctor.getString("specialty");
-    String licenseNumber = jsonDoctor.getString("licenseNumber");
-    String hospital = jsonDoctor.getString("hospital");
-    Doctor doctor = new Doctor(name, dateOfBirth, specialty, licenseNumber, hospital);
-    doctors.add(doctor);
-}
-}
-
-private void loadPatientsFromFile() throws IOException {
-Path path = Paths.get("patient.json");
-byte[] bytes = Files.readAllBytes(path);
-String json = new String(bytes, StandardCharsets.UTF_8);
-JSONObject jsonObject = new JSONObject(json);
-JSONArray jsonPatients = jsonObject.getJSONArray("patients");
-for (int i = 0; i < jsonPatients.length(); i++) {
-    JSONObject jsonPatient = jsonPatients.getJSONObject(i);
-    String name = jsonPatient.getString("name");
-    LocalDate dateOfBirth = LocalDate.parse(jsonPatient.getString("dateOfBirth"), DATE_FORMATTER);
-    String insuranceCompany = jsonPatient.getString("insuranceCompany");
-    String contactNumber = jsonPatient.getString("contactNumber");
-    String email = jsonPatient.getString("email");
-    Patient patient = new Patient(name, dateOfBirth, insuranceCompany, contactNumber, email);
-    patients.add(patient);
-}
-}
-
-private void loadAppointmentsFromFile() throws IOException {
-Path path = Paths.get("appointment.json");
-byte[] bytes = Files.readAllBytes(path);
-String json = new String(bytes, StandardCharsets.UTF_8);
-JSONArray jsonArray = new JSONArray(json);
-for (int i = 0; i < jsonArray.length(); i++) {
-    JSONObject jsonObject = jsonArray.getJSONObject(i);
-    String doctorName = jsonObject.getString("doctor");
-    String patientName = jsonObject.getString("patient");
-    LocalDateTime appointmentDate = LocalDateTime.parse(jsonObject.getString("appointmentDate"), DATE_TIME_FORMATTER);
-    Doctor doctor = findDoctorByName(doctorName);
-    Patient patient = findPatientByName(patientName);
-    Appointment appointment = new Appointment(doctor, patient, appointmentDate);
-    appointments.add(appointment);
-}
-}
-
-private void loadTreatmentsFromFile() throws IOException {
-Path path = Paths.get("treatment.json");
-byte[] bytes = Files.readAllBytes(path);
-String json = new String(bytes, StandardCharsets.UTF_8);
-JSONArray jsonArray = new JSONArray(json);
-for (int i = 0; i < jsonArray.length(); i++) {
-    JSONObject jsonObject = jsonArray.getJSONObject(i);
-    String doctorName = jsonObject.getString("doctor");
-    String patientName = jsonObject.getString("patient");
-    String diagnosis = jsonObject.getString("diagnosis");
-    String medication = jsonObject.getString("medication");
-    LocalDate startDate = LocalDate.parse(jsonObject.getString("startDate"), DATE_FORMATTER);
-    LocalDate endDate = LocalDate.parse(jsonObject.getString("endDate"), DATE_FORMATTER);
-    Doctor doctor = findDoctorByName(doctorName);
-    Patient patient = findPatientByName(patientName);
-    Treatment treatment = new Treatment(doctor, patient, diagnosis, medication, startDate, endDate);
-    treatments.add(treatment);
-}
-}
-
-private Doctor findDoctorByName(String name) {
-for (Doctor doctor : doctors) {
-    if (doctor.getName().equals(name)) {
-        return doctor;
-    }
-}
-return null;
-}
-
-private Patient findPatientByName(String name) {
-for (Patient patient : patients) {
-    if (patient.getName().equals(name)) {
-        return patient;
-    }
-}
-return null;
-}
-
-
-public static void deleteObjectByAttribute(String objectName, String attributeName, String attributeValue) {
-    String filePath = objectName + ".json";
-    Path path = Paths.get(filePath);
-
-    if (Files.exists(path)) {
-        try {
-            // Read the JSON file as a string
-            byte[] bytes = Files.readAllBytes(path);
-            String jsonString = new String(bytes, StandardCharsets.UTF_8);
-
-            // Convert the string to a JSONArray object
-            JSONArray jsonArray = new JSONArray(jsonString);
-
-            // Search for the object with the matching attribute value and remove it
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                if (jsonObject.getString(attributeName).equals(attributeValue)) {
-                    jsonArray.remove(i);
-                    break;
-                }
+            fileWriter.write(String.format(
+                    "  {\"doctor\": \"%s\", \"patient\": \"%s\", \"diagnosis\": \"%s\", \"medication\": \"%s\", \"startDate\": \"%s\", \"endDate\": \"%s\"}",
+                    doctorName, patientName, diagnosis, medication, startDateString, endDateString));
+            if (i < treatments.size() - 1) {
+                fileWriter.write(",");
             }
-
-            // Write the updated JSONArray back to the file
-            Files.writeString(path, jsonArray.toString(), StandardCharsets.UTF_8);
-            System.out.println(objectName + " with " + attributeName + " " + attributeValue + " has been deleted.");
-
-        } catch (IOException e) {
-            System.out.println("An error occurred while reading or writing the JSON file.");
-            e.printStackTrace();
-        } catch (JSONException e) {
-            System.out.println("An error occurred while parsing the JSON file.");
-            e.printStackTrace();
+            fileWriter.write("\n");
         }
-    } else {
-        System.out.println("The " + objectName + " file does not exist.");
+        fileWriter.write("]");
+        fileWriter.close();
+    }
+
+    public void loadFromFiles() throws IOException {
+        loadDoctorsFromFile();
+        loadPatientsFromFile();
+        loadAppointmentsFromFile();
+        loadTreatmentsFromFile();
+    }
+
+    private void loadDoctorsFromFile() throws IOException {
+        Path path = Paths.get("doctor.json");
+        byte[] bytes = Files.readAllBytes(path);
+        String json = new String(bytes, StandardCharsets.UTF_8);
+        JSONObject jsonObject = new JSONObject(json);
+        JSONArray jsonDoctors = jsonObject.getJSONArray("doctors");
+        for (int i = 0; i < jsonDoctors.length(); i++) {
+            JSONObject jsonDoctor = jsonDoctors.getJSONObject(i);
+            String name = jsonDoctor.getString("name");
+            LocalDate dateOfBirth = LocalDate.parse(jsonDoctor.getString("dateOfBirth"), DATE_FORMATTER);
+            String specialty = jsonDoctor.getString("specialty");
+            String licenseNumber = jsonDoctor.getString("licenseNumber");
+            String hospital = jsonDoctor.getString("hospital");
+            Doctor doctor = new Doctor(name, dateOfBirth, specialty, licenseNumber, hospital);
+            doctors.add(doctor);
+        }
+    }
+
+    private void loadPatientsFromFile() throws IOException {
+        Path path = Paths.get("patient.json");
+        byte[] bytes = Files.readAllBytes(path);
+        String json = new String(bytes, StandardCharsets.UTF_8);
+        JSONObject jsonObject = new JSONObject(json);
+        JSONArray jsonPatients = jsonObject.getJSONArray("patients");
+        for (int i = 0; i < jsonPatients.length(); i++) {
+            JSONObject jsonPatient = jsonPatients.getJSONObject(i);
+            String name = jsonPatient.getString("name");
+            LocalDate dateOfBirth = LocalDate.parse(jsonPatient.getString("dateOfBirth"), DATE_FORMATTER);
+            String insuranceCompany = jsonPatient.getString("insuranceCompany");
+            String contactNumber = jsonPatient.getString("contactNumber");
+            String email = jsonPatient.getString("email");
+            Patient patient = new Patient(name, dateOfBirth, insuranceCompany, contactNumber, email);
+            patients.add(patient);
+        }
+    }
+
+    private void loadAppointmentsFromFile() throws IOException {
+        Path path = Paths.get("appointment.json");
+        byte[] bytes = Files.readAllBytes(path);
+        String json = new String(bytes, StandardCharsets.UTF_8);
+        JSONArray jsonArray = new JSONArray(json);
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject jsonObject = jsonArray.getJSONObject(i);
+            String doctorName = jsonObject.getString("doctor");
+            String patientName = jsonObject.getString("patient");
+            LocalDateTime appointmentDate = LocalDateTime.parse(jsonObject.getString("appointmentDate"),
+                    DATE_TIME_FORMATTER);
+            Doctor doctor = findDoctorByName(doctorName);
+            Patient patient = findPatientByName(patientName);
+            Appointment appointment = new Appointment(doctor, patient, appointmentDate);
+            appointments.add(appointment);
+        }
+    }
+
+    private void loadTreatmentsFromFile() throws IOException {
+        Path path = Paths.get("treatment.json");
+        byte[] bytes = Files.readAllBytes(path);
+        String json = new String(bytes, StandardCharsets.UTF_8);
+        JSONArray jsonArray = new JSONArray(json);
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject jsonObject = jsonArray.getJSONObject(i);
+            String doctorName = jsonObject.getString("doctor");
+            String patientName = jsonObject.getString("patient");
+            String diagnosis = jsonObject.getString("diagnosis");
+            String medication = jsonObject.getString("medication");
+            LocalDate startDate = LocalDate.parse(jsonObject.getString("startDate"), DATE_FORMATTER);
+            LocalDate endDate = LocalDate.parse(jsonObject.getString("endDate"), DATE_FORMATTER);
+            Doctor doctor = findDoctorByName(doctorName);
+            Patient patient = findPatientByName(patientName);
+            Treatment treatment = new Treatment(doctor, patient, diagnosis, medication, startDate, endDate);
+            treatments.add(treatment);
+        }
+    }
+
+    private Doctor findDoctorByName(String name) {
+        for (Doctor doctor : doctors) {
+            if (doctor.getName().equals(name)) {
+                return doctor;
+            }
+        }
+        return null;
+    }
+
+    private Patient findPatientByName(String name) {
+        for (Patient patient : patients) {
+            if (patient.getName().equals(name)) {
+                return patient;
+            }
+        }
+        return null;
+    }
+
+    public static void deleteObjectsByAttribute(String objectName, String attributeName, String attributeValue) {
+        String filePath = objectName + ".json";
+        Path path = Paths.get(filePath);
+
+        if (Files.exists(path)) {
+            try {
+                // Read the JSON file as a string
+                byte[] bytes = Files.readAllBytes(path);
+                String jsonString = new String(bytes, StandardCharsets.UTF_8);
+
+                // Convert the string to a JSONObject
+                JSONObject jsonObject = new JSONObject(jsonString);
+
+                // Get the JSONArray for the object
+                JSONArray jsonArray = jsonObject.getJSONArray(objectName + "s");
+
+                // Search for the objects with the matching attribute value and remove them
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject obj = jsonArray.getJSONObject(i);
+                    if (obj.getString(attributeName).equals(attributeValue)) {
+                        jsonArray.remove(i);
+                        i--; // move back one index after removing the object
+                    }
+                }
+
+                // Write the updated JSONObject back to the file
+                Files.writeString(path, jsonObject.toString(), StandardCharsets.UTF_8);
+                System.out.println(objectName + " with " + attributeName + " " + attributeValue + " has been deleted.");
+
+            } catch (IOException e) {
+                System.out.println("An error occurred while reading or writing the JSON file.");
+                e.printStackTrace();
+            } catch (JSONException e) {
+                System.out.println("An error occurred while parsing the JSON file.");
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("The " + objectName + " file does not exist.");
+        }
     }
 }
-
-}
-
-
-

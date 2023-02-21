@@ -1,8 +1,1 @@
-{
-  "doctors": [
-    {"name": "Jonathan Keller", "dateOfBirth": "2017-01-13", "specialty": "3 Westminster Street", "licenseNumber": "T01234", "hospital": "banae"},
-    {"name": "Jonathan Banane", "dateOfBirth": "2017-01-13", "specialty": "3 Westminster Street", "licenseNumber": "T01234", "hospital": "banae"},
-    {"name": "Jonathan Keller", "dateOfBirth": "2017-01-13", "specialty": "3 Westminster Street", "licenseNumber": "T01234", "hospital": "banae"},
-    {"name": "Jonathan Banane", "dateOfBirth": "2017-01-13", "specialty": "3 Westminster Street", "licenseNumber": "T01234", "hospital": "banae"}
-  ]
-}
+{"doctors":[{"specialty":"3 Westminster Street","name":"Jonathan Keller","dateOfBirth":"2017-01-13","licenseNumber":"T01234","hospital":"banae"},{"specialty":"3 Westminster Street","name":"Jonathan Keller","dateOfBirth":"2017-01-13","licenseNumber":"T01234","hospital":"banae"}]}

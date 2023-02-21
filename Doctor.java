@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import java.time.LocalDate;
 
 public class Doctor {
@@ -17,8 +16,8 @@ public class Doctor {
     }
 
     // Getter and setter methods
-     // Getters
-     public String getName() {
+    // Getters
+    public String getName() {
         return name;
     }
 
@@ -59,27 +58,3 @@ public class Doctor {
         this.hospital = hospital;
     }
 }
-=======
-import java.util.ArrayList;
-
-public class Doctor extends Person {
-    ArrayList<Integer> patients;
-    Integer speciality;
-
-    public Doctor(String firstName, String lastName, String address, String phone, String email, String socialNumbre,
-            String BirthDate, Integer id, Integer speciality, ArrayList<Integer> patients) {
-        super(firstName, lastName, address, phone, email, socialNumbre, BirthDate, id);
-        this.patients = patients;
-        this.speciality = speciality;
-    }
-
-    public void addPatient(Integer patientId) {
-        this.patients.add(patientId);
-    }
-
-    @Override
-    public String toString() {
-        return super.toString();
-    }
-}
->>>>>>> f5ddb25beb69268e0e3d07b6185a96fa3ea0b73d
