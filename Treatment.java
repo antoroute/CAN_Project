@@ -8,7 +8,11 @@ public class Treatment {
     private LocalDate startDate;
     private LocalDate endDate;
 
-    public Treatment(Doctor doctor, Patient patient, String diagnosis, String medication, LocalDate startDate, LocalDate endDate) {
+    public Treatment(Doctor doctor, Patient patient, String diagnosis, String medication, LocalDate startDate,
+            LocalDate endDate) {
+        if (patient.getDoctorsId() != doctor.getId()) {
+            throw new IllegalArgumentException("The doctor and the patient are not linked");
+        }
         this.doctor = doctor;
         this.patient = patient;
         this.diagnosis = diagnosis;
