@@ -8,6 +8,7 @@ import java.time.format.*;
 import java.util.*;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class MCS {
@@ -240,6 +241,46 @@ for (Patient patient : patients) {
 }
 return null;
 }
+
+
+public static void deleteObjectByAttribute(String objectName, String attributeName, String attributeValue) {
+    String filePath = objectName + ".json";
+    Path path = Paths.get(filePath);
+
+    if (Files.exists(path)) {
+        try {
+            // Read the JSON file as a string
+            byte[] bytes = Files.readAllBytes(path);
+            String jsonString = new String(bytes, StandardCharsets.UTF_8);
+
+            // Convert the string to a JSONArray object
+            JSONArray jsonArray = new JSONArray(jsonString);
+
+            // Search for the object with the matching attribute value and remove it
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                if (jsonObject.getString(attributeName).equals(attributeValue)) {
+                    jsonArray.remove(i);
+                    break;
+                }
+            }
+
+            // Write the updated JSONArray back to the file
+            Files.writeString(path, jsonArray.toString(), StandardCharsets.UTF_8);
+            System.out.println(objectName + " with " + attributeName + " " + attributeValue + " has been deleted.");
+
+        } catch (IOException e) {
+            System.out.println("An error occurred while reading or writing the JSON file.");
+            e.printStackTrace();
+        } catch (JSONException e) {
+            System.out.println("An error occurred while parsing the JSON file.");
+            e.printStackTrace();
+        }
+    } else {
+        System.out.println("The " + objectName + " file does not exist.");
+    }
+}
+
 }
 
 
