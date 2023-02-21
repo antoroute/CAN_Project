@@ -1,27 +1,60 @@
-import java.lang.reflect.Array;
-import java.util.ArrayList;
+import java.time.LocalDate;
 
-public class Patient extends Person {
-    public Integer doctorId;
-    public ArrayList prescriptions;
+public class Patient {
+    private String name;
+    private LocalDate dateOfBirth;
+    private String insuranceCompany;
+    private String contactNumber;
+    private String email;
 
-    public Patient(String firstName, String lastName, String address, String phone, String email, String socialNumbre,
-            String BirthDate, Integer id, Integer doctorId, ArrayList prescriptions) {
-        super(firstName, lastName, address, phone, email, socialNumbre, BirthDate, id);
-        this.doctorId = doctorId;
-        this.prescriptions = prescriptions;
+    public Patient(String name, LocalDate dateOfBirth, String insuranceCompany, String contactNumber, String email) {
+        this.name = name;
+        this.dateOfBirth = dateOfBirth;
+        this.insuranceCompany = insuranceCompany;
+        this.contactNumber = contactNumber;
+        this.email = email;
     }
 
-    public Integer getDoctorId() {
-        return doctorId;
+    // Getter and setter methods
+    // Getters
+    public String getName() {
+        return name;
     }
 
-    public void setDoctorId(Integer doctorId) {
-        this.doctorId = doctorId;
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
     }
 
-    @Override
-    public String toString() {
-        return super.toString();
+    public String getInsuranceCompany() {
+        return insuranceCompany;
+    }
+
+    public String getContactNumber() {
+        return contactNumber;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    // Setters
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDateOfBirth(LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public void setInsuranceCompany(String insuranceCompany) {
+        this.insuranceCompany = insuranceCompany;
+    }
+
+    public void setPhone(String contactNumber) {
+        this.contactNumber = contactNumber;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
