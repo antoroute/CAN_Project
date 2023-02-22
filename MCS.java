@@ -12,10 +12,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class MCS {
-    private List<Doctor> doctors;
-    private List<Patient> patients;
-    private List<Appointment> appointments;
-    private List<Treatment> treatments;
+    private static List<Doctor> doctors;
+    private static List<Patient> patients;
+    private static List<Appointment> appointments;
+    private static List<Treatment> treatments;
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -29,21 +29,26 @@ public class MCS {
     // Add methods for doctors, patients, appointments, and treatments
 
     public void addDoctor(Doctor doctor) throws IOException {
+        loadDoctorsFromFile();
+        System.out.println(doctors.size());
         doctors.add(doctor);
         saveDoctorsToFile();
     }
 
     public void addPatient(Patient patient) throws IOException {
+        loadPatientsFromFile();
         patients.add(patient);
         savePatientsToFile();
     }
 
     public void addAppointment(Appointment appointment) throws IOException {
+        loadAppointmentsFromFile();
         appointments.add(appointment);
         saveAppointmentsToFile();
     }
 
     public void addTreatment(Treatment treatment) throws IOException {
+        loadTreatmentsFromFile();
         treatments.add(treatment);
         saveTreatmentsToFile();
     }
@@ -156,7 +161,7 @@ public class MCS {
         loadTreatmentsFromFile();
     }
 
-    private void loadDoctorsFromFile() throws IOException {
+    private static void loadDoctorsFromFile() throws IOException {
         Path path = Paths.get("doctor.json");
         byte[] bytes = Files.readAllBytes(path);
         String json = new String(bytes, StandardCharsets.UTF_8);
@@ -175,7 +180,7 @@ public class MCS {
         }
     }
 
-    private void loadPatientsFromFile() throws IOException {
+    private static void loadPatientsFromFile() throws IOException {
         Path path = Paths.get("patient.json");
         byte[] bytes = Files.readAllBytes(path);
         String json = new String(bytes, StandardCharsets.UTF_8);
@@ -194,7 +199,7 @@ public class MCS {
         }
     }
 
-    private void loadAppointmentsFromFile() throws IOException {
+    private static void loadAppointmentsFromFile() throws IOException {
         Path path = Paths.get("appointment.json");
         byte[] bytes = Files.readAllBytes(path);
         String json = new String(bytes, StandardCharsets.UTF_8);
@@ -212,7 +217,7 @@ public class MCS {
         }
     }
 
-    private void loadTreatmentsFromFile() throws IOException {
+    private static void loadTreatmentsFromFile() throws IOException {
         Path path = Paths.get("treatment.json");
         byte[] bytes = Files.readAllBytes(path);
         String json = new String(bytes, StandardCharsets.UTF_8);
@@ -232,22 +237,59 @@ public class MCS {
         }
     }
 
-    private Doctor findDoctorByName(String name) {
+    static Doctor findDoctorByName(String name) throws IOException {
+        loadDoctorsFromFile();
         for (Doctor doctor : doctors) {
             if (doctor.getName().equals(name)) {
                 return doctor;
             }
         }
+        System.out.println("Doctor not found");
         return null;
     }
 
-    private Patient findPatientByName(String name) {
+    static Patient findPatientByName(String name) throws IOException {
+        loadPatientsFromFile();
         for (Patient patient : patients) {
             if (patient.getName().equals(name)) {
                 return patient;
             }
         }
+        System.out.println("Patient not found");
         return null;
+    }
+
+    static ArrayList<Treatment> findTreatmentByPatientName(String name) throws IOException {
+        loadTreatmentsFromFile();
+        ArrayList<Treatment> treatmentsList = new ArrayList<>();
+        for (Treatment treatment : treatments) {
+            if (treatment.getPatient().getName().equals(name)) {
+                treatmentsList.add(treatment);
+            }
+        }
+        return treatmentsList;
+    }
+
+    static ArrayList<Appointment> findAppointmentByPatientName(String name) throws IOException {
+        loadAppointmentsFromFile();
+        ArrayList<Appointment> appointmentsList = new ArrayList<>();
+        for (Appointment appointment : appointments) {
+            if (appointment.getPatient().getName().equals(name)) {
+                appointmentsList.add(appointment);
+            }
+        }
+        return appointmentsList;
+    }
+
+    static ArrayList<Appointment> findAppointmentByDoctorName(String name) throws IOException {
+        loadAppointmentsFromFile();
+        ArrayList<Appointment> appointmentsList = new ArrayList<>();
+        for (Appointment appointment : appointments) {
+            if (appointment.getDoctor().getName().equals(name)) {
+                appointmentsList.add(appointment);
+            }
+        }
+        return appointmentsList;
     }
 
     public static void deleteObjectsByAttribute(String objectName, String attributeName, String attributeValue) {

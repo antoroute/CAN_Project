@@ -1,5 +1,0 @@
-{
-  "patients": [
-    {"name": "Noah", "dateOfBirth": "2017-01-13", "insuranceCompany": "banane", "contactNumber": "0637871981", "email": "noah.Attia@gmail.com", "doctorsId": "1"}
-  ]
-}

@@ -1,0 +1,258 @@
+package src;
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) throws IOException, ParseException {
+        System.out.println("Welcome to the hospital management system!");
+        Scanner scanner = new Scanner(System.in);
+    
+        while (true) {
+            System.out.println("\n");
+            System.out.println("Enter a number to perform an action: ");
+            System.out.println("1. Add a patient");
+            System.out.println("2. Add a doctor");
+            System.out.println("3. Add a treatment");
+            System.out.println("4. Display patient information");
+            System.out.println("5. Display doctor information");
+            System.out.println("6. Display treatment information");
+            System.out.println("0. Exit");
+            int choice = scanner.nextInt();
+    
+            switch (choice) {
+                case 1:
+                    addPatient();
+                    break;
+                case 2:
+                    addDoctor();
+                    break;
+                case 3:
+                    addTreatment();
+                    break;
+                case 4:
+                    displayPatientInfo();
+                    break;
+                case 5:
+                    displayDoctorInfo();
+                    break;
+                case 6:
+                    displayTreatmentInfo();
+                    break;
+                case 0:
+                    System.exit(0);
+                default:
+                    System.out.println("Invalid choice. Try again.");
+            }
+        }
+    }
+    
+    public static void addDoctor() throws ParseException {
+        Scanner scanner = new Scanner(System.in);
+    
+        System.out.println("Enter the doctor's name: ");
+        String name = scanner.nextLine();
+        System.out.println("Enter the doctor's date of birth (dd/MM/yyyy): ");
+        Date dob = new SimpleDateFormat("dd/MM/yyyy").parse(scanner.nextLine());
+        System.out.println("Enter the doctor's gender: ");
+        String gender = scanner.nextLine();
+        System.out.println("Enter the doctor's address: ");
+        String address = scanner.nextLine();
+        System.out.println("Enter the doctor's phone number: ");
+        String phoneNumber = scanner.nextLine();
+        System.out.println("Enter the doctor's specialization: ");
+        String specialization = scanner.nextLine();
+        System.out.println("Enter the doctor's degree: ");
+        String degree = scanner.nextLine();
+        System.out.println("Enter the doctor's license number: ");
+        String licenseNumber = scanner.nextLine();
+    
+        Doctor doctor = new Doctor(name, dob, gender, address, phoneNumber, specialization, degree, licenseNumber);
+    
+        List<Doctor> doctors;
+        try {
+            doctors = DataStore.loadDoctors();
+            doctors.add(doctor);
+            DataStore.saveDoctors(doctors);
+            System.out.println("Doctor added to database.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void addPatient() throws ParseException {
+        Scanner scanner = new Scanner(System.in);
+    
+        System.out.println("Enter the patient's name: ");
+        String name = scanner.nextLine();
+        System.out.println("Enter the patient's date of birth (dd/MM/yyyy): ");
+        Date dob = new SimpleDateFormat("dd/MM/yyyy").parse(scanner.nextLine());
+        System.out.println("Enter the patient's gender: ");
+        String gender = scanner.nextLine();
+        System.out.println("Enter the patient's address: ");
+        String address = scanner.nextLine();
+        System.out.println("Enter the patient's phone number: ");
+        String phoneNumber = scanner.nextLine();
+        System.out.println("Enter the patient's insurrance compagny: ");
+        String insurranceCompagny = scanner.nextLine();
+        System.out.println("Enter the patient's medical history: ");
+        String medicalHistory = scanner.nextLine();
+    
+        Patient patient = new Patient(name, dob, gender, address, phoneNumber, insurranceCompagny, medicalHistory);
+    
+        List<Patient> patients;
+        try {
+            patients = DataStore.loadPatients();
+            patients.add(patient);
+            DataStore.savePatients(patients);
+            System.out.println("Patient added to database.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public static void addTreatment() throws ParseException, IOException {
+        Scanner scanner = new Scanner(System.in);
+    
+        System.out.println("Enter the patient's name: ");
+        String patientName = scanner.nextLine();
+        System.out.println("Enter the treatment type: ");
+        String treatmentType = scanner.nextLine();
+        System.out.println("Enter the doctor's name: ");
+        String doctorName = scanner.nextLine();
+        System.out.println("Enter the treatment date (dd/MM/yyyy): ");
+        Date treatmentDate = new SimpleDateFormat("dd/MM/yyyy").parse(scanner.nextLine());
+    
+        Doctor doctor = null;
+        Patient patient = null;
+        for (Doctor d : DataStore.loadDoctors()) {
+            if (d.getName().equals(doctorName)) {
+                doctor = d;
+            }
+        }
+    
+        for (Patient p : DataStore.loadPatients()) {
+            if (p.getName().equals(patientName)) {
+                patient = p;
+            }
+        }
+    
+        if (doctor == null) {
+            System.out.println("Could not find doctor in the database.");
+            return;
+        }
+
+        if (patient == null) {
+            System.out.println("Could not find patient in the database.");
+            System.out.println("Would you like to add the patient to the database? (y/n)");
+            String choice = scanner.nextLine();
+            if (choice.equals("y")) {
+                addPatient();
+            }
+            
+            return;
+        }
+    
+        Treatment treatment = new Treatment(treatmentDate, treatmentType, doctor, patient);
+    
+        List<Treatment> treatments;
+        try {
+            treatments = DataStore.loadTreatments();
+            treatments.add(treatment);
+            DataStore.saveTreatments(treatments);
+            System.out.println("Treatment added to database.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public static void displayPatientInfo() throws IOException {
+        Scanner scanner = new Scanner(System.in);
+    
+        System.out.println("Enter the patient's name: ");
+        String patientName = scanner.nextLine();
+    
+        Patient patient = null;
+        for (Patient p : DataStore.loadPatients()) {
+            if (p.getName().equals(patientName)) {
+                patient = p;
+            }
+        }
+    
+        if (patient == null) {
+            System.out.println("Could not find patient in the database.");
+            return;
+        }
+    
+        System.out.println("\n");
+        System.out.println("Name: " + patient.getName());
+        System.out.println("Date of Birth: " + patient.getDob());
+        System.out.println("Gender: " + patient.getGender());
+        System.out.println("Address: " + patient.getAddress());
+        System.out.println("Phone Number: " + patient.getPhoneNumber());
+        System.out.println("Insurance Company: " + patient.getInsuranceCompany());
+        System.out.println("Medical History: " + patient.getMedicalHistory());
+    }
+    
+    public static void displayDoctorInfo() throws IOException {
+        Scanner scanner = new Scanner(System.in);
+    
+        System.out.println("Enter the doctor's name: ");
+        String doctorName = scanner.nextLine();
+    
+        Doctor doctor = null;
+        for (Doctor d : DataStore.loadDoctors()) {
+            if (d.getName().equals(doctorName)) {
+                doctor = d;
+            }
+        }
+    
+        if (doctor == null) {
+            System.out.println("Could not find doctor in the database.");
+            return;
+        }
+    
+        System.out.println("\n");
+        System.out.println("Name: " + doctor.getName());
+        System.out.println("Date of Birth: " + doctor.getDob());
+        System.out.println("Gender: " + doctor.getGender());
+        System.out.println("Address: " + doctor.getAddress());
+        System.out.println("Phone Number: " + doctor.getPhoneNumber());
+        System.out.println("Specialization: " + doctor.getSpecialization());
+        System.out.println("Degree: " + doctor.getDegree());
+        System.out.println("License Number: " + doctor.getLicenseNumber());
+    }
+    
+    public static void displayTreatmentInfo() throws IOException, ParseException {
+        Scanner scanner = new Scanner(System.in);
+    
+        System.out.println("Enter the patient's name: ");
+        String patientName = scanner.nextLine();
+        System.out.println("Enter the treatment date (dd/MM/yyyy): ");
+        Date treatmentDate = new SimpleDateFormat("dd/MM/yyyy").parse(scanner.nextLine());
+    
+        Treatment treatment = null;
+        for (Treatment t : DataStore.loadTreatments()) {
+            if (t.getPatient().getName().equals(patientName) && t.getTreatmentDate().equals(treatmentDate)) {
+                treatment = t;
+            }
+        }
+    
+        if (treatment == null) {
+            System.out.println("Could not find treatment in the database.");
+            return;
+        }
+    
+        System.out.println("\n");
+        System.out.println("Patient: " + treatment.getPatient().getName());
+        System.out.println("Doctor: " + treatment.getDoctor().getName());
+        System.out.println("Treatment Date: " + treatment.getTreatmentDate());
+        System.out.println("Treatment Type: " + treatment.getTreatmentType());
+    }
+}
+    
+    
+    
